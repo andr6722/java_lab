@@ -2,11 +2,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class FileUtil {
 
+
+    public static final Logger logger = Logger.getLogger(Main.class.getName());
     public static void writeToDatabase(Scanner scanner) {
-        long startTime = System.currentTimeMillis();
+
         System.out.print("Введите количество объектов для записи: ");
         int count = scanner.nextInt();
         scanner.nextLine();
@@ -30,11 +33,10 @@ public class FileUtil {
                 writer.write(laundry.toString());
                 writer.newLine();
             }
-            Main.writeLog(startTime  + "Запись данных в файл 'базы данных'");
+            logger.info("Writing data to a 'database' file");
             System.out.println("Данные успешно записаны.");
         } catch (IOException e) {
-
-            Main.writeLog(startTime  + "Ошибка при записи данных в файл 'базы данных'");
+            logger.warning("Error writing data to 'database' file");
             System.out.println("Ошибка при записи данных.");
 
         }
@@ -42,27 +44,26 @@ public class FileUtil {
 
 
     public static void readFromDatabase() {
-        long startTime = System.currentTimeMillis();
+
         try (BufferedReader reader = new BufferedReader(new FileReader("database.txt"))) {
             String line;
             List<String> data = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
                 data.add(line);
             }
-            Main.writeLog(startTime + "Чтение данных из файла 'базы данных'");
+            logger.info("Reading data to a 'database' file");
             System.out.println("Данные успешно прочитаны:");
             for (String item : data) {
                 System.out.println(item);
             }
         } catch (IOException e) {
-            System.out.println("Ошибка при чтении данных.");
-            Main.writeLog(startTime + "Ошибка при чтении данных из файла 'базы данных'");
+            logger.warning("Error reading data to 'database' file");
         }
 
     }
 
     public static void updateData(Scanner scanner) {
-        long startTime = System.currentTimeMillis();
+
         try{
             List <String> data = new ArrayList<>();
             BufferedReader reader  = new BufferedReader(new FileReader("database.txt"));
@@ -99,18 +100,18 @@ public class FileUtil {
                     writer.newLine();
                 }
                 writer.close();
-                Main.writeLog(startTime + "Данные изменены");
+                logger.info("Data changed");
                 System.out.println("Данные успешно изменены.");
             }
 
         } catch (IOException e){
-            Main.writeLog(startTime + "Ошибка при изменении данных");
+            logger.warning("Error when changing data");
             System.out.println("Ошибка при изменении данных.");
         }
     }
 
     public static void deleteData(Scanner scanner) {
-        long startTime = System.currentTimeMillis();
+
         try {
 
             List<String> data = new ArrayList<>();
@@ -134,15 +135,15 @@ public class FileUtil {
                     writer.newLine();
                 }
                 writer.close();
+                logger.info("Delete data");
 
-                Main.writeLog(startTime + "Удаленние данных");
                 System.out.println("Данные успешно удалены.");
             } else {
 
                 System.out.println("Некорректный индекс объекта.");
             }
         } catch (IOException e) {
-            Main.writeLog(startTime + "Ошибка при удалении данных");
+            logger.warning("Error delete data");
             System.out.println("Ошибка при удалении данных.");
         }
     }

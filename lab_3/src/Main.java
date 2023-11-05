@@ -1,15 +1,18 @@
 import java.io.*;
 import java.util.Scanner;
-import java.time.*;
+import java.util.logging.*;
 
 public class Main {
+    public static final Logger logger = Logger.getLogger(Main.class.getName());
 
-    public static void main(String[] args) {
-        long startTime = System.currentTimeMillis();
+    public static void main(String[] args) throws IOException {
+        Handler fileHandeler = new FileHandler();
+        logger.addHandler(fileHandeler);
+
         Settings settings = new Settings();
         File file = new File("settings.ini");
-        long endtime = System.currentTimeMillis();
-        writeLog(endtime - startTime + "Старт программы");
+
+        logger.info("Start program");
         if(!file.exists()){
             System.out.println("Файл настроек не найден, создание нового");
             settings.Save();
@@ -50,20 +53,8 @@ public class Main {
                     break;
             }
         }while (choice != 0);
-        writeLog(endtime - startTime + "Конец программы");
 
-    }
+        logger.info("End program");
 
-    public static void writeLog(String log) {
-        Settings settings = new Settings();
-        File file = new File("settings.ini");
-        if (settings.getLogEnabled()) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("log.txt", true))) {
-                writer.write(log);
-                writer.newLine();
-            } catch (IOException e) {
-                System.out.println("Ошибка при записи лога.");
-            }
-        }
     }
 }
