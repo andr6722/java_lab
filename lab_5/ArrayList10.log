@@ -1,0 +1,23 @@
+19:11:2023 22:47:45 
+add, ID = 0, 3286417
+add, ID = 1, 24135
+add, ID = 2, 53780
+add, ID = 3, 26730
+add, ID = 4, 22622
+add, ID = 5, 17172
+add, ID = 6, 20869
+add, ID = 7, 25457
+add, ID = 8, 23864
+add, ID = 9, 300768
+remove, ID = 7, 27471
+set, ID = 0, 34464
+addTotalCount = 9
+addTotalTime = 3801814
+addMedianTime = 422423
+removeTotalCount = 0.9
+removeTotalTime = 27471
+removeMedianTime = 30523.333333333332
+setTotalCount = 0.9
+setTotalTime = 34464
+setMedianTime = 38293.333333333336
+Totaltime = 175039850
