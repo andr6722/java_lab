@@ -1,44 +1,52 @@
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Random;
-import java.util.logging.*;
+import java.util.LinkedList;
 
 public class Main {
 
-    private static final int[] COLLECTION_SIZES = {10, 100};
+    private static final int[] COLLECTION_SIZES = {10, 100, 1000, 10000, 100000};
     private static final double OPERATION_PERCENTAGE = 0.1;
     private static final Random RANDOM = new Random();
 
-    private static Logger logger = Logger.getLogger(Main.class.getName());
-    static FileHandler fh;
 
     public static void main(String[] args) throws IOException {
 
-        Handler fileHandeler = new FileHandler();
-        logger.addHandler(fileHandeler);
-
-        logger.info("Start program: " + java.time.LocalDateTime.now());
-
+        System.out.println("Start program");
         for (int collectionSize : COLLECTION_SIZES) {
-            logger.log(Level.INFO, "ArrayList");
-            testCollectionArray(new ArrayList<>(), collectionSize);
-            logger.log(Level.INFO, "LinkedList");
-            testCollectionLinked(new LinkedList<>(), collectionSize);
 
+            System.out.println("ArrayList " + collectionSize);
+            testCollectionArray(new ArrayList<>(), collectionSize);
+
+            System.out.println("LinkedList " + collectionSize);
+            testCollectionLinked(new LinkedList<>(), collectionSize);
         }
 
-        logger.info("Finish program: " + java.time.LocalDateTime.now());
+        System.out.println("End program");
+
     }
 
     public static void testCollectionLinked(LinkedList<WashingMachine> collection, int collectionSize){
         long totalAddTime = 0;
         long totalRemoveTime = 0;
         long totalSetTime = 0;
+        long startTime_1 = System.nanoTime();
 
+        String fname = "LinkedList" + collectionSize + ".log";
+        File f = new File(fname);
+        Logging log = new Logging(true,fname);
+
+        if(f.exists() && !f.isDirectory()) {
+            f.delete();
+        }
+
+        log.write(getTime());
         for (int index = 0; index < collectionSize; index++){
-            logger.info("add, ID = " + index + ", " + System.nanoTime());
+
             long startTime = System.nanoTime();
 
             ColoredLaundry coloredLaundry = generateRandomLaundry();
@@ -49,10 +57,14 @@ public class Main {
             long endTime = System.nanoTime();
             long addTime = endTime - startTime;
             totalAddTime += addTime;
+
+            log.write("add, ID = " + index + ", " + addTime);
         }
         for (int i = 0; i < collectionSize * OPERATION_PERCENTAGE; i++) {
+
+
             int randomIndex = RANDOM.nextInt(collectionSize);
-            logger.info("remove, ID = " + randomIndex + ", " + System.nanoTime());
+
             long startTime = System.nanoTime();
 
 
@@ -62,12 +74,13 @@ public class Main {
             long removeTime = endTime - startTime;
             totalRemoveTime += removeTime;
 
+
             collectionSize--;
+            log.write("remove, ID = " + randomIndex + ", " + removeTime);
         }
 
         for (int i = 0; i < collectionSize * OPERATION_PERCENTAGE; i++) {
             int randomIndex = RANDOM.nextInt(collectionSize);
-            logger.info("set, ID = " + randomIndex + ", " + System.nanoTime());
             long startTime = System.nanoTime();
 
             WashingMachine washingMachine = collection.get(randomIndex);
@@ -77,19 +90,25 @@ public class Main {
             long endTime = System.nanoTime();
             long setTime = endTime - startTime;
             totalSetTime += setTime;
+
+            log.write("set, ID = " + randomIndex + ", " + setTime);
         }
 
-        logger.info( "addTotalCount = " + collectionSize);
-        logger.info( "addTotalTime = " + totalAddTime);
-        logger.info( "addMedianTime = " + (totalAddTime / collectionSize));
+        log.write( "addTotalCount = " + collectionSize);
+        log.write( "addTotalTime = " + totalAddTime);
+        log.write( "addMedianTime = " + (totalAddTime / collectionSize));
 
-        logger.info( "removeTotalCount = " + (collectionSize * OPERATION_PERCENTAGE));
-        logger.info( "removeTotalTime = " + totalRemoveTime);
-        logger.info( "removeMedianTime = " + (totalRemoveTime / (collectionSize * OPERATION_PERCENTAGE)));
+        log.write( "removeTotalCount = " + (collectionSize * OPERATION_PERCENTAGE));
+        log.write( "removeTotalTime = " + totalRemoveTime);
+        log.write( "removeMedianTime = " + (totalRemoveTime / (collectionSize * OPERATION_PERCENTAGE)));
 
-        logger.info( "setTotalCount = " + (collectionSize * OPERATION_PERCENTAGE));
-        logger.info( "setTotalTime = " + totalSetTime);
-        logger.info( "setMedianTime = " + (totalSetTime / (collectionSize * OPERATION_PERCENTAGE)));
+        log.write( "setTotalCount = " + (collectionSize * OPERATION_PERCENTAGE));
+        log.write( "setTotalTime = " + totalSetTime);
+        log.write( "setMedianTime = " + (totalSetTime / (collectionSize * OPERATION_PERCENTAGE)));
+
+        long endTime = System.nanoTime();
+        long setTime = endTime - startTime_1;
+        log.write("Totaltime = " + setTime);
     }
 
     public static void testCollectionArray(ArrayList<WashingMachine> collection, int collectionSize) {
@@ -97,8 +116,19 @@ public class Main {
         long totalRemoveTime = 0;
         long totalSetTime = 0;
 
+        long startTime_1 = System.nanoTime();
+
+        String fname = "ArrayList" + collectionSize + ".log";
+        File f = new File(fname);
+        Logging log = new Logging(true,fname);
+
+        if(f.exists() && !f.isDirectory()) {
+            f.delete();
+        }
+
+        log.write(getTime());
+
         for (int index = 0; index < collectionSize; index++) {
-            logger.info("add, ID = " + index + ", " + System.nanoTime());
             long startTime = System.nanoTime();
 
             ColoredLaundry coloredLaundry = generateRandomLaundry();
@@ -109,13 +139,13 @@ public class Main {
             long endTime = System.nanoTime();
             long addTime = endTime - startTime;
             totalAddTime += addTime;
+
+            log.write("add, ID = " + index + ", " + addTime);
         }
 
         for (int i = 0; i < collectionSize * OPERATION_PERCENTAGE; i++) {
             int randomIndex = RANDOM.nextInt(collectionSize);
-            logger.info("remove, ID = " + randomIndex + ", " + System.nanoTime());
             long startTime = System.nanoTime();
-
 
             collection.remove(randomIndex);
 
@@ -124,11 +154,12 @@ public class Main {
             totalRemoveTime += removeTime;
 
             collectionSize--;
+
+            log.write("remove, ID = " + randomIndex + ", " + removeTime);
         }
 
         for (int i = 0; i < collectionSize * OPERATION_PERCENTAGE; i++) {
             int randomIndex = RANDOM.nextInt(collectionSize);
-            logger.info("set, ID = " + randomIndex + ", " + System.nanoTime());
             long startTime = System.nanoTime();
 
             WashingMachine washingMachine = collection.get(randomIndex);
@@ -138,21 +169,34 @@ public class Main {
             long endTime = System.nanoTime();
             long setTime = endTime - startTime;
             totalSetTime += setTime;
+
+            log.write("set, ID = " + randomIndex + ", " + setTime);
         }
 
-        logger.info( "addTotalCount = " + collectionSize);
-        logger.info( "addTotalTime = " + totalAddTime);
-        logger.info( "addMedianTime = " + (totalAddTime / collectionSize));
+        log.write( "addTotalCount = " + collectionSize);
+        log.write( "addTotalTime = " + totalAddTime);
+        log.write( "addMedianTime = " + (totalAddTime / collectionSize));
 
-        logger.info( "removeTotalCount = " + (collectionSize * OPERATION_PERCENTAGE));
-        logger.info( "removeTotalTime = " + totalRemoveTime);
-        logger.info( "removeMedianTime = " + (totalRemoveTime / (collectionSize * OPERATION_PERCENTAGE)));
+        log.write( "removeTotalCount = " + (collectionSize * OPERATION_PERCENTAGE));
+        log.write( "removeTotalTime = " + totalRemoveTime);
+        log.write( "removeMedianTime = " + (totalRemoveTime / (collectionSize * OPERATION_PERCENTAGE)));
 
-        logger.info( "setTotalCount = " + (collectionSize * OPERATION_PERCENTAGE));
-        logger.info( "setTotalTime = " + totalSetTime);
-        logger.info( "setMedianTime = " + (totalSetTime / (collectionSize * OPERATION_PERCENTAGE)));
+        log.write( "setTotalCount = " + (collectionSize * OPERATION_PERCENTAGE));
+        log.write( "setTotalTime = " + totalSetTime);
+        log.write( "setMedianTime = " + (totalSetTime / (collectionSize * OPERATION_PERCENTAGE)));
+
+        long endTime = System.nanoTime();
+        long setTime = endTime - startTime_1;
+        log.write("Totaltime = " + setTime);
     }
 
+    static String getTime() {
+        LocalTime time = LocalTime.now();
+        LocalDate day = LocalDate.now();
+        String s = String.format("%02d:%02d:%4d ",day.getDayOfMonth(),day.getMonthValue(),day.getYear());
+        s += String.format("%02d:%02d:%02d ",time.getHour(),time.getMinute(),time.getSecond());
+        return s;
+    }
     private static ColoredLaundry generateRandomLaundry() {
         int washingTemperature = RANDOM.nextInt(100) + 1;
         int ironingTemperature = RANDOM.nextInt(200) + 1;
