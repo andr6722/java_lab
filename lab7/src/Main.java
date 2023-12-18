@@ -1,6 +1,7 @@
 // Пример использования
 public class Main {
     public static void main(String[] args) {
+<<<<<<< HEAD
         SharedData sharedData = new SharedData();
 
         Thread readerThread1 = new Thread(() -> {
@@ -33,5 +34,29 @@ public class Main {
         readerThread3.start();
         readerThread4.start();
         writerThread2.start();
+=======
+        final SynchronizedString synchronizedString = new SynchronizedString();
+
+        // Поток-писатель
+        Thread writerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronizedString.write("Hello, World!");
+            }
+        });
+
+        // Поток-читатель
+        Thread readerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String data = synchronizedString.read();
+                System.out.println("Read: " + data);
+            }
+        });
+
+        // Запускаем потоки
+        writerThread.start();
+        readerThread.start();
+>>>>>>> origin/master
     }
 }
